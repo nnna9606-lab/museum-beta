@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block title %}{{ artifact.get_name(g.language) }} - Թվայնացված Թանգարան{% endblock %}
+
+{% block main_class %}artifact-detail{% endblock %}
+
+{% block content %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='detail.css') }}">
+{% endblock %}
+
+<div class="detail-container">
+    <div class="detail-media">
+        <!-- Image Carousel Slideshow -->
+        {% if artifact.get_all_images() %}
+            <div class="image-carousel">
+                <div class="carousel-main">
+                    <div class="carousel-images" id="detailCarouselImages">
+                        {% for img in artifact.get_all_images() %}
+                            <div class="carousel-image-item">
+                                <img src="{% if img.get_image_url is defined %}{{ img.get_image_url() }}{% else %}{{ url_for('static', filename='uploads/' ~ img.filename) }}{% endif %}" alt="{{ artifact.get_name(g.language) }}" class="detail-carousel-img">
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <!-- Navigation Buttons -->
+                    <button class="carousel-prev" onclick="detailCarouselMove(-1)">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="carousel-next" onclick="detailCarouselMove(1)">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                    
+                    <!-- Image Counter -->
+                    <div class="carousel-counter">
+                        <span id="currentImageNum">1</span> / <span id="totalImageNum">{{ artifact.get_all_images()|length }}</span>
+                    </div>
+                </div>
+                
+                <!-- Thumbnails -->
+                <div class="carousel-thumbnails">
+                    {% for img in artifact.get_all_images() %}
+                        <div class="thumbnail-item {% if loop.first %}active{% endif %}" onclick="detailCarouselGoToSlide({{ loop.index0 }})">
+                            <img src="{{ img.get_thumbnail_url() }}" alt="thumbnail">
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% else %}
+            <!-- Single Image Display -->
+            <div class="single-image-container">
+                <img src="{{ artifact.get_image_url() if artifact.get_image_url is defined else (artifact.image_url) }}" alt="{{ artifact.get_name(g.language) }}" class="detail-image">
+            </div>
+        {% endif %}
+    </div>
+    <aside class="detail-card">
+        <h1 class="artifact-title">{{ artifact.get_name(g.language) }}</h1>
+
+        <div class="meta-row">
+            <div class="meta-item"><i class="fas fa-calendar-alt"></i> {{ artifact.year }}</div>
+            <div class="meta-item"><i class="fas fa-tag"></i>
+                <span class="tags">
+                    {{ artifact.tags | default('') | replace('"','') | replace('[','') | replace(']','') | replace(',', ', ') }}
+                </span>
+            </div>
+        </div>
+
+        <div class="description-block">
+            <h2>{{ g.get_text('details') }}</h2>
+            <p>{{ artifact.get_description(g.language) }}</p>
+        </div>
+
+        <div class="detail-actions">
+            <a href="{{ url_for('artifacts') }}" class="btn btn-ghost">
+                <i class="fas fa-arrow-left"></i> {{ g.get_text('view_all_artifacts_link') }}
+            </a>
+
+            {% if current_user.is_authenticated and current_user.is_admin %}
+                <a href="{{ url_for('edit_artifact', id=artifact.id) }}" class="btn btn-primary">
+                    <i class="fas fa-edit"></i> {{ g.get_text('edit') }}
+                </a>
+                <form method="POST" action="{{ url_for('delete_artifact', id=artifact.id) }}" class="inline-form" onsubmit="return confirm('Համոզվա՞ծ եք, որ ուզում եք ջնջել այս նմուշը։');">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Ջնջել
+                    </button>
+                </form>
+            {% endif %}
+        </div>
+    </aside>
+</div>
+
+<script>
+let detailCurrentSlide = 0;
+let detailAutoPlayInterval;
+
+function initDetailCarousel() {
+    const items = document.querySelectorAll('.carousel-image-item');
+    const totalImages = items.length;
+    
+    if (totalImages === 0) return;
+    
+    document.getElementById('totalImageNum').textContent = totalImages;
+    startDetailAutoPlay();
+}
+
+function detailCarouselMove(direction) {
+    const items = document.querySelectorAll('.carousel-image-item');
+    const totalSlides = items.length;
+    
+    detailCurrentSlide = (detailCurrentSlide + direction + totalSlides) % totalSlides;
+    updateDetailCarousel();
+    
+    clearInterval(detailAutoPlayInterval);
+    startDetailAutoPlay();
+}
+
+function detailCarouselGoToSlide(index) {
+    detailCurrentSlide = index;
+    updateDetailCarousel();
+    clearInterval(detailAutoPlayInterval);
+    startDetailAutoPlay();
+}
+
+function updateDetailCarousel() {
+    const carousel = document.getElementById('detailCarouselImages');
+    carousel.style.transform = `translateX(-${detailCurrentSlide * 100}%)`;
+    
+    document.getElementById('currentImageNum').textContent = detailCurrentSlide + 1;
+    
+    document.querySelectorAll('.thumbnail-item').forEach((thumb, index) => {
+        thumb.classList.toggle('active', index === detailCurrentSlide);
+    });
+}
+
+function startDetailAutoPlay() {
+    detailAutoPlayInterval = setInterval(() => {
+        detailCarouselMove(1);
+    }, 6000);
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', (e) => {
+    if (document.querySelector('.carousel-main')) {
+        if (e.key === 'ArrowLeft') detailCarouselMove(-1);
+        if (e.key === 'ArrowRight') detailCarouselMove(1);
+    }
+});
+
+document.addEventListener('DOMContentLoaded', initDetailCarousel);
+</script>
+{% endblock %}

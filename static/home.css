@@ -1,0 +1,517 @@
+/* Գլխավոր էջի ոճեր */
+.home-page {
+    background-color: #fff;
+}
+
+/* Hero բաժին */
+.hero {
+    position: relative;
+    height: 80vh;
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    margin-bottom: 4rem;
+    overflow: hidden;
+}
+
+.hero-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.hero-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.hero-inner {
+    max-width: 900px;
+    padding: 2rem;
+    position: relative;
+    z-index: 2;
+}
+
+.hero h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.hero .lead {
+    font-size: 1.4rem;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.hero-actions {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.hero-actions .add-button {
+    background: #c0392b;
+    color: white;
+    padding: 1rem 2.5rem;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: 2px solid #c0392b;
+}
+
+.hero-actions .add-button:hover {
+    background: transparent;
+    border-color: white;
+}
+
+.hero-actions .view-more {
+    background: transparent;
+    color: white;
+    padding: 1rem 2.5rem;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: 2px solid white;
+}
+
+.hero-actions .view-more:hover {
+    background: white;
+    color: #2c3e50;
+}
+
+/* Բաժինների վերնագրեր */
+.section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 0 1rem;
+}
+
+.section-header h2 {
+    font-size: 2.5rem;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.section-header p {
+    color: #7f8c8d;
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Ցուցադրությունների բաժին */
+.featured-exhibitions {
+    padding: 4rem 0;
+    background-color: #f9f9f9;
+}
+
+.exhibitions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    padding: 0 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.exhibition-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.exhibition-card:hover {
+    transform: translateY(-10px);
+}
+
+.exhibition-image {
+    position: relative;
+    height: 250px;
+    overflow: hidden;
+}
+
+.exhibition-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.exhibition-card:hover .exhibition-image img {
+    transform: scale(1.1);
+}
+
+.status {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.5rem 1.5rem;
+    border-radius: 20px;
+    color: white;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status.active {
+    background: #c0392b;
+}
+
+.exhibition-info {
+    padding: 2rem;
+}
+
+.exhibition-info h3 {
+    font-size: 1.4rem;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+}
+
+.dates {
+    color: #7f8c8d;
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+}
+
+.artifacts-count {
+    color: #c0392b;
+    font-weight: 600;
+}
+
+/* Նմուշների բաժին */
+.artifacts-overview {
+    padding: 4rem 0;
+}
+
+.artifacts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 0 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.artifact-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.artifact-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.artifact-image {
+    height: 300px;
+    position: relative;
+    overflow: hidden;
+}
+
+.artifact-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.artifact-card:hover .artifact-image img {
+    transform: scale(1.1);
+}
+
+.artifact-info {
+    padding: 1.5rem;
+    background: white;
+}
+
+.artifact-info h3 {
+    font-size: 1.2rem;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.artifact-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+}
+
+.artifact-year {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+}
+
+.artifact-link {
+    color: #c0392b;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.artifact-link:hover {
+    color: #a93226;
+}
+
+/* Featured Carousel */
+.featured-carousel {
+    padding: 4rem 2rem;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    margin-bottom: 4rem;
+}
+
+.carousel-container {
+    position: relative;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.carousel-wrapper {
+    overflow: hidden;
+    border-radius: 15px;
+    background: white;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+.carousel-inner {
+    display: flex;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 100%;
+}
+
+.carousel-item {
+    display: flex;
+    min-width: 100%;
+    background: white;
+    overflow: hidden;
+}
+
+.carousel-image {
+    width: 50%;
+    overflow: hidden;
+    position: relative;
+}
+
+.carousel-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.carousel-item:hover .carousel-image img {
+    transform: scale(1.05);
+}
+
+.carousel-content {
+    width: 50%;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: white;
+}
+
+.carousel-content h3 {
+    font-size: 2rem;
+    color: #2c3e50;
+    margin: 0 0 0.5rem;
+    font-weight: 700;
+}
+
+.carousel-year {
+    color: #667eea;
+    font-size: 1rem;
+    margin: 0 0 1.5rem;
+    font-weight: 500;
+}
+
+.carousel-description {
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+}
+
+.carousel-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.carousel-link {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.carousel-link:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+}
+
+.carousel-control {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(102, 126, 234, 0.8);
+    color: white;
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.carousel-control:hover {
+    background: rgba(102, 126, 234, 1);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-control.prev {
+    left: -70px;
+}
+
+.carousel-control.next {
+    right: -70px;
+}
+
+.carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+.carousel-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #ccc;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.carousel-dot.active {
+    background: #667eea;
+    width: 30px;
+    border-radius: 6px;
+}
+
+.carousel-dot:hover {
+    background: #667eea;
+}
+
+/* Ադապտիվ դիզայն */
+@media (max-width: 768px) {
+    .hero {
+        min-height: 500px;
+    }
+
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+
+    .hero .lead {
+        font-size: 1.2rem;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .section-header h2 {
+        font-size: 2rem;
+    }
+
+    .exhibitions-grid,
+    .artifacts-grid {
+        grid-template-columns: 1fr;
+        padding: 0 1rem;
+    }
+
+    /* Carousel responsive */
+    .carousel-item {
+        flex-direction: column;
+    }
+
+    .carousel-image {
+        width: 100%;
+        height: 250px;
+    }
+
+    .carousel-content {
+        width: 100%;
+        padding: 2rem;
+    }
+
+    .carousel-content h3 {
+        font-size: 1.5rem;
+    }
+
+    .carousel-control.prev {
+        left: 10px;
+    }
+
+    .carousel-control.next {
+        right: 10px;
+    }
+
+    .carousel-control {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+
+    .featured-carousel {
+        padding: 2rem 1rem;
+    }
+}

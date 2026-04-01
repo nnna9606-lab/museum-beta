@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Հարցրու թանգարանին{% endblock %}
+
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='chat.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <div class="chat-header">Հարցրու թանգարանին</div>
+    <div class="chat-messages">
+        {% for q in questions %}
+            <div class="message user">
+                {{ q.question }}
+                <div style="font-size:0.85em;color:#888;margin-top:0.25em;">{{ q.created_at.strftime('%d.%m.%Y %H:%M') }}</div>
+            </div>
+            {% if q.answer %}
+            <div class="message museum">
+                {{ q.answer }}
+                <div style="font-size:0.85em;color:#888;margin-top:0.25em;">Թանգարան • {{ q.answered_at.strftime('%d.%m.%Y %H:%M') if q.answered_at else '' }}</div>
+            </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <form method="POST" class="chat-input-row">
+        <textarea name="question" placeholder="Գրեք ձեր հարցը..." required></textarea>
+        <button type="submit">Ուղարկել</button>
+    </form>
+    {% if success %}
+        <div class="success-message">Ձեր հարցը հաջողությամբ ուղարկվեց։ Շնորհակալություն հետաքրքրության համար։</div>
+    {% endif %}
+</div>
+{% endblock %}

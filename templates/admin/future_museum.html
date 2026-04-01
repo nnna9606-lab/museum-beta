@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Կառավարել թանգարանի ապագայի գաղափարները{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <h1 style="margin-bottom: 1.5rem;"><i class="fas fa-lightbulb"></i> Թանգարանի ապագայի գաղափարներ</h1>
+    <p style="color: #888; font-size: 1.05rem; margin-bottom: 2rem;">Ստորև ներկայացված են օգտատերերի կողմից առաջարկված ապագայի գաղափարները։ Կարող եք ջնջել կամ պահպանել դրանք:</p>
+    {% if ideas and ideas|length > 0 %}
+    <table style="width:100%; background:#fff; border-radius:10px; box-shadow:0 2px 10px rgba(0,0,0,0.04); overflow:hidden;">
+        <thead style="background:#f5f5f5;">
+            <tr>
+                <th style="padding:12px 8px; text-align:left;">#</th>
+                <th style="padding:12px 8px; text-align:left;">Գաղափար</th>
+                <th style="padding:12px 8px; text-align:left;">Ամսաթիվ</th>
+                <th style="padding:12px 8px; text-align:left;">Գործողություն</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for idea in ideas %}
+            <tr>
+                <td style="padding:10px 8px;">{{ loop.index }}</td>
+                <td style="padding:10px 8px;">{{ idea.text }}</td>
+                <td style="padding:10px 8px;">{{ idea.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
+                <td style="padding:10px 8px;">
+                    <form method="POST" action="{{ url_for('admin_delete_idea', idea_id=idea.id) }}" style="display:inline;">
+                        <button type="submit" class="btn-primary" style="background:#ff6b6b; border:none; padding:6px 16px; border-radius:6px; color:#fff; font-size:0.95rem;">Ջնջել</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-block" style="margin-top:2rem;">
+        <i class="fas fa-lightbulb"></i>
+        <p>Գաղափարներ դեռ չկան։</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

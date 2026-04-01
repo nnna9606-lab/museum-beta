@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+
+{% block title %}Մուտք - Թվայնացված Թանգարան{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='auth.css') }}">
+{% endblock %}
+
+{% block main_class %}auth-page-split{% endblock %}
+
+{% block content %}
+    <div class="split-auth">
+        <aside class="split-aside">
+            <div class="aside-inner">
+                <h2>{{ g.get_text('welcome_login') }}</h2>
+                <p class="lead">{{ g.get_text('login_intro') }}</p>
+                <div class="features-container">
+                    <div class="features-item">
+                        <i class="fas fa-crown"></i>
+                        <h4>{{ g.get_text('admin_feature') }}</h4>
+                        <p>{{ g.get_text('admin_feature_desc') }}</p>
+                    </div>
+                    <div class="features-item">
+                        <i class="fas fa-user"></i>
+                        <h4>{{ g.get_text('user_feature') }}</h4>
+                        <p>{{ g.get_text('user_feature_desc') }}</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <section class="split-form">
+            <div class="login-tabs">
+                <div class="tab-buttons">
+                    <button type="button" class="tab-btn active" data-tab="user-login">
+                        <i class="fas fa-user"></i> {{ g.get_text('user_feature') }}
+                    </button>
+                    <button type="button" class="tab-btn" data-tab="admin-login">
+                        <i class="fas fa-crown"></i> {{ g.get_text('admin_feature') }}
+                    </button>
+                </div>
+
+                <!-- User Login Tab -->
+                <div class="tab-content active" id="user-login">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-user-circle"></i> {{ g.get_text('user_login_tab') }}</h3>
+                            <p class="muted">{{ g.get_text('user_login_desc') }}</p>
+                        </div>
+
+                        {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                                <div class="flash" role="status" aria-live="polite">
+                                    {% for msg in messages %}
+                                        <div class="flash-item">{{ msg }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        {% endwith %}
+
+                        <form method="POST" class="form-compact" autocomplete="on" action="{{ url_for('login') }}">
+                            <label for="username-user">{{ g.get_text('username_label') }}</label>
+                            <input id="username-user" name="username" type="text" placeholder="{{ g.get_text('username_placeholder') }}" required autofocus>
+
+                            <label for="password-user">{{ g.get_text('password_label') }}</label>
+                            <div class="password-wrap">
+                                <input id="password-user" name="password" type="password" placeholder="{{ g.get_text('password_placeholder') }}" required>
+                                <button type="button" class="pwd-toggle" aria-label="Բացել/փակել գաղտնաբառ"><i class="fas fa-eye"></i></button>
+                            </div>
+
+                            <div class="options-row">
+                                <label class="checkbox-inline"><input type="checkbox" name="remember"> {{ g.get_text('remember_me_label') }}</label>
+                                <a class="link-muted" href="{{ url_for('reset_password_request') }}">{{ g.get_text('forgot_password_link') }}</a>
+                            </div>
+
+                            <div class="actions">
+                                <button class="btn primary" type="submit">{{ g.get_text('login_button') }}</button>
+                                <a class="btn outline" href="{{ url_for('register') }}">{{ g.get_text('register') }}</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Admin Login Tab -->
+                <div class="tab-content" id="admin-login">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-lock"></i> {{ g.get_text('admin_login_title') }}</h3>
+                            <p class="muted">{{ g.get_text('admin_login_desc') }}</p>
+                        </div>
+
+                        <div class="admin-warning">
+                            <i class="fas fa-info-circle"></i>
+                            <p>{{ g.get_text('admin_warning') }}</p>
+                        </div>
+
+                        <form method="POST" class="form-compact" autocomplete="on" action="{{ url_for('login') }}">
+                            <label for="username-admin">{{ g.get_text('admin_username_label') }}</label>
+                            <input id="username-admin" name="username" type="text" placeholder="{{ g.get_text('admin_username_placeholder') }}" required>
+
+                            <label for="password-admin">{{ g.get_text('admin_password_label') }}</label>
+                            <div class="password-wrap">
+                                <input id="password-admin" name="password" type="password" placeholder="{{ g.get_text('admin_password_placeholder') }}" required>
+                                <button type="button" class="pwd-toggle" aria-label="Բացել/փակել գաղտնաբառ"><i class="fas fa-eye"></i></button>
+                            </div>
+
+                            <div class="options-row">
+                                <label class="checkbox-inline"><input type="checkbox" name="remember"> {{ g.get_text('remember_me_label') }}</label>
+                            </div>
+
+                            <div class="actions">
+                                <button class="btn primary admin-btn" type="submit">{{ g.get_text('admin_login_button') }}</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        (function(){
+            // Tab switching
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Remove active class from all buttons and contents
+                    tabButtons.forEach(b => b.classList.remove('active'));
+                    tabContents.forEach(tc => tc.classList.remove('active'));
+                    
+                    // Add active class to clicked button and corresponding content
+                    this.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                    
+                    // Focus first input in active tab
+                    const firstInput = document.getElementById(tabId).querySelector('input');
+                    if (firstInput) firstInput.focus();
+                });
+            });
+
+            // Password toggle
+            document.querySelectorAll('.pwd-toggle').forEach(btn => {
+                btn.addEventListener('click', function(){
+                    const pwd = this.parentElement.querySelector('input');
+                    if(!pwd) return;
+                    const t = pwd.getAttribute('type') === 'password' ? 'text' : 'password';
+                    pwd.setAttribute('type', t);
+                    this.querySelector('i').classList.toggle('fa-eye');
+                    this.querySelector('i').classList.toggle('fa-eye-slash');
+                });
+            });
+        })();
+    </script>
+{% endblock %}

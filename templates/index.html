@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+{% endblock %}
+
+{% block main_class %}home-page{% endblock %}
+
+{% block content %}
+    <section class="hero">
+        <div class="hero-image">
+            <img src="https://images.unsplash.com/photo-1564399579883-451a5d44ec08?w=1200&h=600&fit=crop" alt="Թանգարան" loading="lazy">
+            <div class="hero-overlay"></div>
+        </div>
+        <div class="hero-inner">
+            <h1>{{ g.get_text('museum_treasures') }}</h1>
+            <p class="lead">{{ g.get_text('discover_history') }}</p>
+            <div class="hero-actions">
+                <a class="view-more" href="{{ url_for('artifacts') }}">
+                    <i class="fas fa-cube"></i> {{ g.get_text('view_samples') }}
+                </a>
+                <!-- Removed exhibitions link: exhibitions page deleted -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ...existing code... -->
+
+    <!-- Removed all exhibitions section as requested -->
+
+    <section class="artifacts-overview">
+        <div class="section-header">
+            <h2>{{ g.get_text('featured_specimens') }}</h2>
+            <p>{{ g.get_text('explore_specimens') }}</p>
+        </div>
+
+        <div class="artifacts-grid">
+            {% for artifact in artifacts %}
+                <div class="artifact-card">
+                    {% if artifact.image_url %}
+                        {% if artifact.image_url.startswith('http') or artifact.image_url.startswith('/') %}
+                            <img src="{{ artifact.image_url }}" alt="{{ artifact.get_name(g.language) }}" class="artifact-image">
+                        {% else %}
+                            <img src="{{ url_for('static', filename='uploads/' ~ artifact.image_url) }}" alt="{{ artifact.get_name(g.language) }}" class="artifact-image">
+                        {% endif %}
+                    {% else %}
+                        <img src="{{ url_for('static', filename='default-artifact.jpg') }}" alt="{{ artifact.get_name(g.language) }}" class="artifact-image">
+                    {% endif %}
+                                        <div class="artifact-info">
+                                                <h3>{{ artifact.get_name(g.language) }}</h3>
+                                                <p class="year">{{ artifact.year }}</p>
+                                                <div class="artifact-actions">
+                                                    <button class="fav-btn {% if current_user.is_authenticated and (artifact in current_user.favorites_artifacts) %}active{% endif %}" data-type="artifact" data-id="{{ artifact.id }}" title="Add to favorites">
+                                                        <i class="fas fa-heart"></i>
+                                                    </button>
+                                                    <a href="{{ url_for('artifact_detail', id=artifact.id) }}" class="view-more">{{ g.get_text('details') }}</a>
+                                                </div>
+                                        </div>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+<script>
+let currentSlide = 0;
+let autoPlayInterval;
+
+function initCarousel() {
+    const items = document.querySelectorAll('.carousel-item');
+    const dotsContainer = document.getElementById('carouselDots');
+    
+    if (!items.length) return;
+    
+    // Create dots
+    items.forEach((_, index) => {
+        const dot = document.createElement('div');
+        dot.classList.add('carousel-dot');
+        if (index === 0) dot.classList.add('active');
+        dot.onclick = () => goToSlide(index);
+        dotsContainer.appendChild(dot);
+    });
+    
+    // Auto-play
+    startAutoPlay();
+}
+
+function moveCarousel(direction) {
+    const items = document.querySelectorAll('.carousel-item');
+    const totalSlides = items.length;
+    
+    currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+    updateCarousel();
+    
+    // Reset auto-play on manual navigation
+    clearInterval(autoPlayInterval);
+    startAutoPlay();
+}
+
+function goToSlide(index) {
+    currentSlide = index;
+    updateCarousel();
+    clearInterval(autoPlayInterval);
+    startAutoPlay();
+}
+
+function updateCarousel() {
+    const carousel = document.getElementById('artifactsCarousel');
+    carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
+    
+    // Update dots
+    document.querySelectorAll('.carousel-dot').forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentSlide);
+    });
+}
+
+function startAutoPlay() {
+    autoPlayInterval = setInterval(() => {
+        moveCarousel(1);
+    }, 5000);
+}
+
+// Initialize carousel when page loads
+document.addEventListener('DOMContentLoaded', initCarousel);
+</script>
+
+{% endblock %}

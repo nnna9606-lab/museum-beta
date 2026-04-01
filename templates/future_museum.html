@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('static', filename='future_museum.css') }}">
+{% endblock %}
+{% block content %}
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        document.body.classList.add('future-museum-bg');
+      });
+    </script>
+  <div class="future-museum-page-wrapper" style="margin-top: 40px;">
+    <div class="future-museum-container">
+      <h2>Թանգարանի ապագան</h2>
+      <p>Այստեղ կարող եք ծանոթանալ թանգարանի զարգացման պլաններին և առաջարկել ձեր գաղափարները:</p>
+      <form method="post" class="future-museum-form">
+        <label for="idea">Ձեր գաղափարը</label>
+        <textarea id="idea" name="idea" rows="3" required></textarea>
+        <button type="submit">Ուղարկել</button>
+      </form>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+      {% endwith %}
+      <div class="future-museum-ideas">
+        <h4>Առաջարկված գաղափարներ</h4>
+        <ul>
+          {% for idea in ideas %}
+            <li>
+              <span style="font-weight:600;">{{ idea.text }}</span>
+              <span style="color:#888; font-size:0.95em; margin-left:8px;">({{ idea.created_at.strftime('%d.%m.%Y %H:%M') }})</span>
+            </li>
+          {% else %}
+            <li>Առայժմ առաջարկներ չկան։</li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="future-museum-section">
+        <h3>Թանգարանի թվային նորարարություններ</h3>
+        <p>Մենք մշակում ենք վիրտուալ իրականության (VR) և ընդլայնված իրականության (AR) նախագծեր, որոնք թույլ կտան այցելուներին նոր ձևով բացահայտել մեր հավաքածուները։</p>
+      </div>
+      <div class="future-museum-section">
+        <h3>Համագործակցություններ և միջազգային ծրագրեր</h3>
+        <p>Թանգարանը համագործակցում է միջազգային հաստատությունների հետ՝ համատեղ ցուցադրություններ և գիտական ծրագրեր իրականացնելու համար։</p>
+      </div>
+      <div class="future-museum-section">
+        <h3>Կրթական նախաձեռնություններ</h3>
+        <p>Մենք նախատեսում ենք կրթական ծրագրեր դպրոցականների և ուսանողների համար՝ նպաստելով մշակութային ժառանգության պահպանմանը և տարածմանը։</p>
+      </div>
+      <!-- Հասանելիություն բոլորի համար բաժինը արդեն ավելացված է վերևում -->
+      <div class="future-museum-section">
+        <h3>Համայնքային ներգրավվածություն</h3>
+        <p>Թանգարանը խրախուսում է համայնքի անդամների մասնակցությունը միջոցառումներին, քննարկումներին և համատեղ նախագծերին։</p>
+      </div>
+      <div class="future-museum-section">
+        <h3>Կանաչ թանգարան</h3>
+        <p>Մենք կարևորում ենք էկոլոգիական պատասխանատվությունը՝ ներդնելով կանաչ տեխնոլոգիաներ և խթանելով կայուն զարգացումը թանգարանում։</p>
+      </div>
+      <div class="future-museum-section">
+        <h3>Թանգարանի թվային արխիվ</h3>
+        <p>Ստեղծում ենք թվային արխիվ, որտեղ կպահպանվեն թանգարանի բոլոր ցուցանմուշների, միջոցառումների և պատմական փաստաթղթերի թվային տարբերակները՝ հասանելի բոլորի համար։</p>
+      </div>
+    </div>
+  </div>
+{% endblock %}

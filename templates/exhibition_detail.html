@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+<!-- Removed exhibition detail page as requested -->
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='exhibition_detail.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="exhibition-detail">
+    <div class="exhibition-header">
+                <!-- Removed exhibition title display as requested -->
+                    <button class="fav-btn {% if current_user.is_authenticated and (exhibition in current_user.favorites_exhibitions) %}active{% endif %}" data-type="exhibition" data-id="{{ exhibition.id }}" title="Add to favorites" style="margin-left:12px;">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                    {% if current_user.is_authenticated and current_user.is_admin %}
+                    <form method="POST" action="{{ url_for('clear_exhibition_images', id=exhibition.id) }}" style="display:inline; margin-left:8px;">
+                        <button class="btn danger" type="submit" onclick="return confirm('{{ g.get_text('confirm_clear_images') }}');">{{ g.get_text('clear_images_button') }}</button>
+                    </form>
+                    {% endif %}
+                </h2> <!-- Removed exhibition header as requested -->
+        <div class="exhibition-meta">
+            <span class="dates">
+                <i class="fas fa-calendar-alt"></i>
+                {{ exhibition.start_date.strftime('%d.%m.%Y') }} - {{ exhibition.end_date.strftime('%d.%m.%Y') }}
+            </span>
+            {% if exhibition.start_date <= today and exhibition.end_date >= today %}
+                <span class="status active"><i class="fas fa-circle"></i> {{ g.get_text('status_active') }}</span>
+            {% elif exhibition.start_date > today %}
+                <span class="status upcoming"><i class="fas fa-circle"></i> {{ g.get_text('status_upcoming') }}</span>
+            {% else %}
+                <span class="status past"><i class="fas fa-circle"></i> {{ g.get_text('status_past') }}</span>
+            {% endif %}
+        </div> <!-- Removed exhibition status display as requested -->
+    </div>
+
+    <div class="exhibition-content">
+        <div class="exhibition-main-image">
+            {% if exhibition.image_url %}
+                {% if exhibition.image_url.startswith('http') or exhibition.image_url.startswith('/') %}
+                    <img src="{{ exhibition.image_url }}" alt="{{ exhibition.get_title(g.language) }}" loading="lazy">
+                {% else %}
+                    <img src="{{ url_for('static', filename='uploads/' ~ exhibition.image_url) }}" alt="{{ exhibition.get_title(g.language) }}" loading="lazy">
+                {% endif %}
+            {% else %}
+                <img src="{{ url_for('static', filename='default-exhibit.jpg') }}" alt="{{ exhibition.get_title(g.language) }}" loading="lazy">
+            {% endif %}
+        </div>
+
+        <div class="exhibition-gallery">
+            {% if exhibition.images %}
+                <div class="gallery-grid">
+                    {% for img in exhibition.images %}
+                        <div class="gallery-item">
+                            <img src="{{ img.get_image_url() }}" alt="{{ img.caption or exhibition.get_title(g.language) }}" loading="lazy">
+                            {% if current_user.is_authenticated and current_user.is_admin %}
+                                <form method="POST" action="{{ url_for('delete_exhibition_image', id=exhibition.id, img_id=img.id) }}" onsubmit="return confirm('{{ g.get_text('confirm_delete_image') }}');">
+                                    <button class="btn small danger" type="submit">{{ g.get_text('delete') }}</button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if current_user.is_authenticated and current_user.is_admin %}
+            <div class="gallery-add">
+                <form method="POST" action="{{ url_for('add_exhibition_image', id=exhibition.id) }}">
+                    <input name="image_url" type="text" placeholder="Նկարի հղում (URL կամ ֆայլի անուն)" required>
+                    <div style="font-size:13px;color:#666;margin-bottom:4px;">Օրինակ՝ <b>https://example.com/image.jpg</b> կամ <b>Հնագույնզանգ․jpg</b></div>
+                    <input name="caption" type="text" placeholder="Caption (optional)">
+                    <button class="btn" type="submit">{{ g.get_text('add_image_button') }}</button>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">{{ exhibition.artifacts|length }}</div>
+                <div class="stat-label">{{ g.get_text('artifacts_section') }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">{{ (exhibition.end_date - exhibition.start_date).days }}</div>
+                <div class="stat-label">{{ g.get_text('days') }}</div>
+            </div>
+            {% if exhibition.start_date > today %}
+            <div class="stat-card">
+                <div class="stat-value">{{ (exhibition.start_date - today).days }}</div>
+                <div class="stat-label">{{ g.get_text('coming_soon') }}</div>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="exhibition-info-grid">
+            <div class="info-card">
+                <h3><i class="fas fa-info-circle"></i> {{ g.get_text('details') }}</h3>
+                <p class="description">{{ exhibition.get_description(g.language) }}</p>
+                {% if exhibition.location %}
+                <div class="location-info">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>{{ exhibition.location }}</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="artifacts-section">
+            <h3><i class="fas fa-cube"></i> {{ g.get_text('artifacts_section') }}</h3>
+            <div class="artifacts-grid">
+                {% for artifact in exhibition.artifacts %}
+                    <div class="artifact-card">
+                        {% if artifact.image_url %}
+                            {% if artifact.image_url.startswith('http') or artifact.image_url.startswith('/') %}
+                                <img src="{{ artifact.image_url }}" alt="{{ artifact.get_name(g.language) }}" class="artifact-image" loading="lazy">
+                            {% else %}
+                                <img src="{{ url_for('static', filename='uploads/' ~ artifact.image_url) }}" alt="{{ artifact.get_name(g.language) }}" class="artifact-image" loading="lazy">
+                            {% endif %}
+                        {% else %}
+                            <img src="{{ url_for('static', filename='default-artifact.jpg') }}" alt="{{ artifact.get_name(g.language) }}" class="artifact-image" loading="lazy">
+                        {% endif %}
+                        <div class="artifact-info">
+                            <h4>{{ artifact.get_name(g.language) }}</h4>
+                            <p class="year"><i class="fas fa-calendar"></i> {{ artifact.year }}</p>
+                            <a href="{{ url_for('artifact_detail', id=artifact.id) }}" class="view-more">
+                                <i class="fas fa-info-circle"></i> {{ g.get_text('details') }}
+                            </a>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="no-items">
+                        <i class="fas fa-box-open"></i>
+                        <p>{{ g.get_text('no_artifacts_msg') }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

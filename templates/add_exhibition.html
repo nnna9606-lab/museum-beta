@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}Նոր ցուցադրություն - Թվայնացված Թանգարան{% endblock %}
+
+{% block main_class %}add-form{% endblock %}
+
+{% block content %}
+    {% block head %}
+        <link rel="stylesheet" href="{{ url_for('static', filename='forms.css') }}">
+    {% endblock %}
+
+    <div class="form-container">
+        <h1 class="form-title"><span class="decor-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M3 7h18v10H3z" fill="#3b82f6" opacity="0.08"/>
+                <rect x="6" y="10" width="4" height="6" rx="1" fill="#3160b0"/>
+                <rect x="14" y="10" width="4" height="6" rx="1" fill="#2563eb"/>
+            </svg>
+        </span> Նոր ցուցադրություն</h1>
+
+        <div class="exhibition-grid">
+            <div class="form-column">
+                <form method="POST" class="add-exhibition-form">
+                    <div class="form-group">
+                        <label for="title">Վերնագիր <span class="required">*</span></label>
+                        <input type="text" id="title" name="title" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Նկարագրություն</label>
+                        <textarea id="description" name="description" rows="4"></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group half">
+                            <label for="start_date">Սկիզբ</label>
+                            <input type="date" id="start_date" name="start_date">
+                        </div>
+                        <div class="form-group half">
+                            <label for="end_date">Ավարտ</label>
+                            <input type="date" id="end_date" name="end_date">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="image_url">Նկարի հղում (url)</label>
+                        <input type="url" id="image_url" name="image_url" placeholder="https://example.com/poster.jpg">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Ընտրեք նմուշները</label>
+                        <div class="artifacts-selection">
+                            {% for artifact in artifacts %}
+                                <div class="artifact-checkbox">
+                                    <input type="checkbox" id="artifact-{{ artifact.id }}" name="artifacts" value="{{ artifact.id }}">
+                                    <label for="artifact-{{ artifact.id }}">
+                                        {% if artifact.image_url %}
+                                            {% if artifact.image_url.startswith('http') or artifact.image_url.startswith('/') %}
+                                                <img src="{{ artifact.image_url }}" alt="{{ artifact.name }}">
+                                            {% else %}
+                                                <img src="{{ url_for('static', filename='uploads/' ~ artifact.image_url) }}" alt="{{ artifact.name }}">
+                                            {% endif %}
+                                        {% else %}
+                                            <img src="{{ url_for('static', filename='default-artifact.jpg') }}" alt="{{ artifact.name }}">
+                                        {% endif %}
+                                        <span class="artifact-name">{{ artifact.name }}</span>
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary"><i class="fas fa-plus"></i> Ստեղծել ցուցադրություն</button>
+                          <!-- Removed exhibitions back button: exhibitions page deleted -->
+                    </div>
+                </form>
+            </div>
+
+            <aside class="preview-column">
+                <div class="preview-card">
+                    <h3>Պրեվյու</h3>
+                    <div class="poster-preview">
+                        <img id="posterPreview" src="{{ url_for('static', filename='default-poster.jpg') }}" alt="Poster preview">
+                    </div>
+                    <div class="selected-count muted" id="selectedCount">Ընտրված է՝ 0 նմուշ</div>
+                    <div class="selected-list" id="selectedList"></div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <script>
+    // Update poster preview when image_url changes
+    document.addEventListener('input', function(e){
+        if(e.target && e.target.id === 'image_url'){
+            const img = document.getElementById('posterPreview');
+            img.src = e.target.value || "{{ url_for('static', filename='default-poster.jpg') }}";
+            img.classList.add('loaded');
+        }
+    });
+
+    // Toggle selected class on artifact tiles and update selected list
+    function updateSelectedList(){
+        const checked = Array.from(document.querySelectorAll('.artifact-checkbox input:checked'));
+        const list = document.getElementById('selectedList');
+        const count = document.getElementById('selectedCount');
+        list.innerHTML = '';
+        checked.forEach(cb => {
+            const label = document.querySelector("label[for='"+cb.id+"']");
+            const clone = label.querySelector('img').cloneNode();
+            clone.width = 48; clone.height = 48; clone.style.borderRadius = '6px'; clone.style.marginRight='8px';
+            const item = document.createElement('div'); item.className='selected-item';
+            item.appendChild(clone);
+            const name = document.createElement('span'); name.textContent = label.querySelector('.artifact-name').textContent;
+            item.appendChild(name);
+            list.appendChild(item);
+        });
+        count.textContent = `Ընտրված է՝ ${checked.length} նմուշ`;
+    }
+
+    document.querySelectorAll('.artifact-checkbox input').forEach(cb => cb.addEventListener('change', function(){
+        const lbl = document.querySelector("label[for='"+this.id+"']");
+        if(this.checked) lbl.classList.add('selected'); else lbl.classList.remove('selected');
+        updateSelectedList();
+    }));
+    </script>
+{% endblock %}

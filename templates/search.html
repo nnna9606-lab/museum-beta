@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+{% block title %}Որոնում - {{ query }} - Թվայնացված Թանգարան{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='search.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="search-page">
+    <div class="search-header">
+        <h1>
+            {% if query %}
+                Որոնման արդյունքներ "{{ query }}" հարցման համար
+            {% else %}
+                Որոնում թանգարանի հավաքածուում
+            {% endif %}
+        </h1>
+    </div>
+
+    <div class="search-container">
+        <!-- Որոնման ֆիլտրեր -->
+        <aside class="search-filters">
+            <h2>Ֆիլտրեր</h2>
+            <form action="{{ url_for('search') }}" method="GET" class="filter-form">
+                <input type="hidden" name="q" value="{{ query }}">
+                
+                <div class="filter-group">
+                    <label>Տեսակ</label>
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" name="type" value="all" {% if search_type == 'all' %}checked{% endif %}>
+                            Բոլորը
+                        </label>
+                        <label>
+                            <input type="radio" name="type" value="artifacts" {% if search_type == 'artifacts' %}checked{% endif %}>
+                            Նմուշներ
+                        </label>
+                        <label>
+                            <input type="radio" name="type" value="exhibitions" {% if search_type == 'exhibitions' %}checked{% endif %}>
+                            Ցուցադրություններ
+                        </label>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label>Տարեթիվ</label>
+                    <div class="year-range">
+                        <input type="number" name="year_from" placeholder="Սկսած" value="{{ filters.year_from }}">
+                        <span>-</span>
+                        <input type="number" name="year_to" placeholder="Մինչև" value="{{ filters.year_to }}">
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label>Կատեգորիա</label>
+                    <select name="category">
+                        <option value="">Բոլորը</option>
+                        <option value="archaeological" {% if filters.category == 'archaeological' %}selected{% endif %}>Հնագիտական</option>
+                        <option value="historical" {% if filters.category == 'historical' %}selected{% endif %}>Պատմական</option>
+                        <option value="art" {% if filters.category == 'art' %}selected{% endif %}>Արվեստ</option>
+                        <option value="cultural" {% if filters.category == 'cultural' %}selected{% endif %}>Մշակութային</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Ցուցադրության կարգավիճակ</label>
+                    <select name="status">
+                        <option value="">Բոլորը</option>
+                        <option value="active" {% if filters.status == 'active' %}selected{% endif %}>Ընթացիկ</option>
+                        <option value="upcoming" {% if filters.status == 'upcoming' %}selected{% endif %}>Սպասվող</option>
+                        <option value="past" {% if filters.status == 'past' %}selected{% endif %}>Ավարտված</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="apply-filters">
+                    <i class="fas fa-filter"></i> Կիրառել ֆիլտրերը
+                </button>
+            </form>
+        </aside>
+
+        <!-- Որոնման արդյունքներ -->
+        <div class="search-results">
+            {% if search_type in ['all', 'artifacts'] and artifacts %}
+                <section class="results-section">
+                    <h2>Նմուշներ ({{ artifacts|length }})</h2>
+                    <div class="artifacts-grid">
+                        {% for artifact in artifacts %}
+                            <div class="artifact-card">
+                                <div class="artifact-image">
+                                    {% if artifact.image_url %}
+                                        {% if artifact.image_url.startswith('http') or artifact.image_url.startswith('/') %}
+                                            <img src="{{ artifact.image_url }}" alt="{{ artifact.name }}" loading="lazy">
+                                        {% else %}
+                                            <img src="{{ url_for('static', filename='uploads/' ~ artifact.image_url) }}" alt="{{ artifact.name }}" loading="lazy">
+                                        {% endif %}
+                                    {% else %}
+                                        <img src="{{ url_for('static', filename='default-artifact.jpg') }}" alt="{{ artifact.name }}" loading="lazy">
+                                    {% endif %}
+                                </div>
+                                <div class="artifact-info">
+                                    <h3>{{ artifact.name }}</h3>
+                                    <p class="year">{{ artifact.year }}</p>
+                                    <a href="{{ url_for('artifact_detail', id=artifact.id) }}" class="view-more">
+                                        <i class="fas fa-info-circle"></i> Մանրամասներ
+                                    </a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </section>
+            {% endif %}
+
+            {% if search_type in ['all', 'exhibitions'] and exhibitions %}
+                <section class="results-section">
+                    <h2>Ցուցադրություններ ({{ exhibitions|length }})</h2>
+                    <div class="exhibitions-grid">
+                        {% for exhibition in exhibitions %}
+                            <div class="exhibition-card">
+                                <div class="exhibition-image">
+                                    {% if exhibition.image_url %}
+                                        {% if exhibition.image_url.startswith('http') or exhibition.image_url.startswith('/') %}
+                                            <img src="{{ exhibition.image_url }}" alt="{{ exhibition.title }}" loading="lazy">
+                                        {% else %}
+                                            <img src="{{ url_for('static', filename='uploads/' ~ exhibition.image_url) }}" alt="{{ exhibition.title }}" loading="lazy">
+                                        {% endif %}
+                                    {% else %}
+                                        <img src="{{ url_for('static', filename='default-exhibit.jpg') }}" alt="{{ exhibition.title }}" loading="lazy">
+                                    {% endif %}
+                                    {% set today = today|default(now().date()) %}
+                                    {% if exhibition.start_date <= today and exhibition.end_date >= today %}
+                                        <span class="status active">Ընթացիկ</span>
+                                    {% elif exhibition.start_date > today %}
+                                        <span class="status upcoming">Սպասվող</span>
+                                    {% else %}
+                                        <span class="status past">Ավարտված</span>
+                                    {% endif %}
+                                </div>
+                                <div class="exhibition-info">
+                                    <h3>{{ exhibition.title }}</h3>
+                                    <p class="dates">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        {{ exhibition.start_date.strftime('%d.%m.%Y') }} - {{ exhibition.end_date.strftime('%d.%m.%Y') }}
+                                    </p>
+                                    <a href="{{ url_for('exhibition_detail', id=exhibition.id) }}" class="view-more">
+                                        <i class="fas fa-info-circle"></i> Մանրամասներ
+                                    </a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </section>
+            {% endif %}
+
+            {% if not artifacts and not exhibitions %}
+                <div class="no-results">
+                    <i class="fas fa-search"></i>
+                    <h2>Որոնման արդյունքներ չեն գտնվել</h2>
+                    <p>Փորձեք փոխել որոնման պարամետրերը կամ ֆիլտրերը</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

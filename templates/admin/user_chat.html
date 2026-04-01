@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Օգտատիրոջ չատ{% endblock %}
+
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='chat.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <div class="chat-header">{{ user.username }} — Չատ թանգարանի հետ</div>
+    <div class="chat-messages">
+        {% for q in questions %}
+            <div class="message user">
+                {{ q.question }}
+                <div style="font-size:0.85em;color:#888;margin-top:0.25em;">{{ q.created_at.strftime('%d.%m.%Y %H:%M') }}</div>
+            </div>
+            {% if q.answer %}
+            <div class="message museum">
+                {{ q.answer }}
+                <div style="font-size:0.85em;color:#888;margin-top:0.25em;">Թանգարան • {{ q.answered_at.strftime('%d.%m.%Y %H:%M') if q.answered_at else '' }}</div>
+            </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <form method="POST" class="chat-input-row">
+        <textarea name="answer" placeholder="Գրեք ձեր պատասխանը..." required></textarea>
+        <input type="hidden" name="question_id" id="question_id" value="">
+        <button type="submit">Պատասխանել</button>
+    </form>
+</div>
+<script>
+// When admin clicks a user question, fill hidden input with question id
+// (You can enhance this to allow replying to specific questions)
+</script>
+{% endblock %}

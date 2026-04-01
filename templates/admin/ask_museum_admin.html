@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Կառավարել հարցերը{% endblock %}
+
+{% block content %}
+<div class="admin-questions-container">
+    <h1>Հարցրու թանգարանին — հարցերի կառավարում</h1>
+    <table class="admin-questions-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Օգտատեր</th>
+                <th>Էլ. հասցե</th>
+                <th>Հարց</th>
+                <th>Պատասխան</th>
+                <th>Գործողություն</th>
+            </tr>
+        </thead>
+        <tbody>
+                        {% for q in questions %}
+                        <tr>
+                                <td>{{ q.id }}</td>
+                                <td>
+                                    {% if q.user %}
+                                        <a href="{{ url_for('admin_user_chat', user_id=q.user.id) }}" style="color:#2d3e50; text-decoration:underline;">{{ q.user.username }}</a>
+                                    {% else %}
+                                        Անանուն
+                                    {% endif %}
+                                </td>
+                                <td>{{ q.email or '' }}</td>
+                                <td>{{ q.question }}</td>
+                                <td>{% if q.answer %}{{ q.answer }}{% else %}<span style="color: #999">Չպատասխանած</span>{% endif %}</td>
+                                <td>
+                                        <form method="POST" action="{{ url_for('admin_answer_question', question_id=q.id) }}">
+                                                <input type="text" name="answer" placeholder="Պատասխան..." value="{{ q.answer or '' }}" required style="width: 120px;">
+                                                <button type="submit">Պահպանել</button>
+                                        </form>
+                                </td>
+                        </tr>
+                        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

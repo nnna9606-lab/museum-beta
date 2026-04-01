@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Իմ հարցերը{% endblock %}
+
+{% block content %}
+<div class="user-questions-container">
+    <h1>Իմ հարցերը թանգարանին</h1>
+    <table class="user-questions-table">
+        <thead>
+            <tr>
+                <th>Հարց</th>
+                <th>Պատասխան</th>
+                <th>Ամսաթիվ</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for q in questions %}
+            <tr>
+                <td>{{ q.question }}</td>
+                <td>{% if q.answer %}{{ q.answer }}{% else %}<span style="color: #999">Չպատասխանած</span>{% endif %}</td>
+                <td>{{ q.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

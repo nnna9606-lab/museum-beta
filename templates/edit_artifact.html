@@ -1,0 +1,272 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% extends "base.html" %}
+
+{% block title %}Խմբագրել նմուշը - Թվայնացված Թանգարան{% endblock %}
+
+{% block main_class %}edit-artifact-page{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='forms.css') }}">
+<style>
+.edit-artifact-form {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 12px #0001;
+    padding: 32px 32px 24px 32px;
+}
+.edit-artifact-form h1 {
+    font-size: 2rem;
+    margin-bottom: 24px;
+    text-align: center;
+}
+.edit-artifact-form .form-row {
+    display: flex;
+    gap: 32px;
+}
+.edit-artifact-form .form-col {
+    flex: 1;
+}
+.edit-artifact-form .form-group {
+    margin-bottom: 18px;
+}
+.edit-artifact-form label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+}
+.edit-artifact-form input[type="text"],
+.edit-artifact-form input[type="number"],
+.edit-artifact-form textarea,
+.edit-artifact-form select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #bbb;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+.edit-artifact-form textarea {
+    min-height: 90px;
+}
+.edit-artifact-form .form-actions {
+    margin-top: 24px;
+    display: flex;
+    gap: 16px;
+}
+.edit-artifact-form .form-actions .btn-primary {
+    background: #3f6fe0;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 24px;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+.edit-artifact-form .form-actions .btn-secondary {
+    background: #eee;
+    color: #222;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 24px;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+.edit-artifact-form .image-preview {
+    text-align: center;
+    margin-bottom: 18px;
+}
+.edit-artifact-form .image-preview img {
+    max-width: 220px;
+    max-height: 220px;
+    border-radius: 8px;
+    border: 1.5px solid #3f6fe0;
+    background: #f7f7f7;
+}
+.edit-artifact-form .gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+.edit-artifact-form .gallery .gallery-item {
+    position: relative;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    overflow: hidden;
+    width: 90px;
+    height: 90px;
+    background: #fafbfc;
+}
+.edit-artifact-form .gallery .gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.edit-artifact-form .gallery .delete-btn {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: rgba(255,0,0,0.8);
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    padding: 2px 6px;
+    font-size: 13px;
+    cursor: pointer;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<form method="POST" enctype="multipart/form-data" class="edit-artifact-form" role="form">
+    <h1>Խմբագրել նմուշը</h1>
+    <div class="form-row">
+        <div class="form-col">
+            <div class="form-group">
+                <label for="name">Անվանում <span class="required">*</span></label>
+                <input type="text" id="name" name="name" value="{{ artifact.name }}" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Նկարագրություն</label>
+                <textarea id="description" name="description">{{ artifact.description }}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="year">Տարեթիվ</label>
+                <input type="number" id="year" name="year" value="{{ artifact.year }}">
+            </div>
+            <div class="form-group">
+                <label for="category">Կատեգորիա</label>
+                <select id="category" name="category">
+                    <option value="">Ընտրել կատեգորիան</option>
+                    <option value="archaeological" {% if artifact.category == 'archaeological' %}selected{% endif %}>Հնագիտական</option>
+                    <option value="historical" {% if artifact.category == 'historical' %}selected{% endif %}>Պատմական</option>
+                    <option value="art" {% if artifact.category == 'art' %}selected{% endif %}>Արվեստ</option>
+                    <option value="cultural" {% if artifact.category == 'cultural' %}selected{% endif %}>Մշակութային</option>
+                    <option value="numismatic" {% if artifact.category == 'numismatic' %}selected{% endif %}>Դրամագիտական</option>
+                    <option value="manuscript" {% if artifact.category == 'manuscript' %}selected{% endif %}>Ձեռագիր</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="tags">Թեգեր</label>
+                <input type="text" id="tags" name="tags" value="{{ artifact.tags }}" placeholder="Թեգերը բաժանեք ստորակետով">
+                <small>Օրինակ՝ բրոնզե դար, զենք, զարդեր</small>
+            </div>
+            <div class="form-group">
+                <label for="image_url">Հիմնական նկարի հղում (URL կամ ֆայլի անուն)<br><span style="font-weight:normal;font-size:13px;">Օրինակ՝ <b>https://example.com/image.jpg</b> կամ <b>Հնագույնզանգ․jpg</b></span></label>
+                <input type="text" id="image_url" name="image_url" value="{{ artifact.image_url }}" placeholder="https://example.com/image.jpg կամ Հնագույնզանգ․jpg">
+            </div>
+            <div class="form-group">
+                <label for="image_file">Ներբեռնել նոր հիմնական նկար</label>
+                <input type="file" id="image_file" name="image_file" accept="image/*">
+                <small>Ընտրեք ֆայլը՝ նախադիտման համար</small>
+            </div>
+        </div>
+        <div class="form-col">
+            <div class="form-group image-preview">
+                {% if artifact.image_url %}
+                    {% if artifact.image_url.startswith('http') or artifact.image_url.startswith('/') %}
+                        <img src="{{ artifact.image_url }}" alt="{{ artifact.name }}">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='uploads/' ~ artifact.image_url) }}" alt="{{ artifact.name }}">
+                    {% endif %}
+                {% else %}
+                    <img src="{{ url_for('static', filename='default-artifact.jpg') }}" alt="{{ artifact.name }}">
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label>Լրացուցիչ նկարներ</label>
+                {% if artifact.get_all_images() %}
+                <div class="gallery">
+                    {% for img in artifact.get_all_images() %}
+                        <div class="gallery-item">
+                            <img src="{{ img.get_image_url() }}" alt="նկար">
+                            <form method="POST" action="{{ url_for('delete_artifact_image', image_id=img.id) }}" onsubmit="return confirm('Ջնջե՞լ այս նկարը:');">
+                                <button type="submit" class="delete-btn">x</button>
+                            </form>
+                        </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p style="color: #999;">Լրացուցիչ նկարներ չկան</p>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="additional_images">Ավելացնել լրացուցիչ նկարներ</label>
+                <input type="file" id="additional_images" name="additional_images" accept="image/*" multiple onchange="previewNewImages(this);">
+                <div id="previewContainer" style="display: flex; flex-wrap: wrap; gap: 8px; min-height: 60px; align-items: flex-start;"></div>
+                <div id="selectedCount" style="margin-top: 8px; color: #666;"></div>
+                <small>Ընտրեք մեկ կամ մի քանի նոր նկար ավելացնելու համար</small>
+            </div>
+        </div>
+    </div>
+    <div class="form-actions">
+        <button type="submit" class="btn-primary"><i class="fas fa-save"></i> Պահպանել</button>
+        <a href="{{ url_for('artifact_detail', id=artifact.id) }}" class="btn-secondary">Չեղարկել</a>
+    </div>
+</form>
+<script>
+        (function(){
+                const fileInput = document.getElementById('image_file');
+                const previewWrap = document.querySelector('.image-preview');
+                if(!fileInput || !previewWrap) return;
+                fileInput.addEventListener('change', function(e){
+                        const f = this.files && this.files[0];
+                        if(!f) return;
+                        const reader = new FileReader();
+                        reader.onload = function(ev){
+                                let img = previewWrap.querySelector('img');
+                                if(!img){ img = document.createElement('img'); previewWrap.innerHTML=''; previewWrap.appendChild(img); }
+                                img.src = ev.target.result;
+                                img.classList.add('loaded');
+                        };
+                        reader.readAsDataURL(f);
+                });
+        })();
+        function previewNewImages(input) {
+                const previewContainer = document.getElementById('previewContainer');
+                const selectedCount = document.getElementById('selectedCount');
+                if (input.files && input.files.length > 0) {
+                        previewContainer.innerHTML = '';
+                        for (let i = 0; i < input.files.length; i++) {
+                                const reader = new FileReader();
+                                reader.onload = function(e) {
+                                        const imgWrapper = document.createElement('div');
+                                        imgWrapper.style.position = 'relative';
+                                        imgWrapper.style.display = 'inline-block';
+                                        const img = document.createElement('img');
+                                        img.src = e.target.result;
+                                        img.style.maxWidth = '100px';
+                                        img.style.maxHeight = '100px';
+                                        img.style.objectFit = 'cover';
+                                        img.style.borderRadius = '4px';
+                                        img.style.border = '2px solid #3f6fe0';
+                                        imgWrapper.appendChild(img);
+                                        previewContainer.appendChild(imgWrapper);
+                                }
+                                reader.readAsDataURL(input.files[i]);
+                        }
+                        selectedCount.textContent = `Ընտրված նոր նկարներ՝ ${input.files.length}`;
+                } else {
+                        previewContainer.innerHTML = '';
+                        selectedCount.textContent = '';
+                }
+        }
+</script>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Գրանցում - Թվայնացված Թանգարան{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='auth.css') }}">
+{% endblock %}
+
+{% block main_class %}auth-page-split{% endblock %}
+
+{% block content %}
+    <div class="split-auth split-reverse">
+        <aside class="split-aside">
+            <div class="aside-inner">
+                <h2>{{ g.get_text('join_us') }}</h2>
+                <p class="lead">{{ g.get_text('register_intro') }}</p>
+                <ul class="features">
+                    <li><i class="fas fa-user-shield"></i> {{ g.get_text('secure_profile') }}</li>
+                    <li><i class="fas fa-cubes"></i> {{ g.get_text('manage_favorites') }}</li>
+                    <li><i class="fas fa-bell"></i> {{ g.get_text('get_notifications') }}</li>
+                </ul>
+            </div>
+        </aside>
+
+        <section class="split-form">
+            <div class="card">
+                <div class="card-header">
+                    <h3>{{ g.get_text('register_title') }}</h3>
+                    <p class="muted">{{ g.get_text('register_subtitle') }}</p>
+                </div>
+
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div class="flash" role="status" aria-live="polite">
+                            {% for msg in messages %}
+                                <div class="flash-item">{{ msg }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+                <form method="POST" class="form-compact">
+                    <label for="username">{{ g.get_text('username_label') }}</label>
+                    <input id="username" name="username" type="text" required>
+
+                    <label for="email">{{ g.get_text('email_label') }}</label>
+                    <input id="email" name="email" type="email" required>
+
+                    <label for="password">{{ g.get_text('password_label') }}</label>
+                    <input id="password" name="password" type="password" required>
+
+                    <div class="actions">
+                        <button class="btn primary" type="submit"><i class="fas fa-user-plus"></i> {{ g.get_text('register_button') }}</button>
+                        <a class="btn outline" href="{{ url_for('login') }}">{{ g.get_text('login') }}</a>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+{% endblock %}

@@ -1,0 +1,304 @@
+{% extends "base.html" %}
+
+{% block title %}Իմ նախընտրածները - Թվայնացված Թանգարան{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='forms.css') }}">
+  <style>
+    .favorites-container {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .fav-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 50px 40px;
+      border-radius: 12px;
+      margin-bottom: 40px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .fav-header h1 {
+      font-size: 36px;
+      margin: 0 0 10px;
+      font-weight: 600;
+    }
+
+    .fav-header p {
+      font-size: 16px;
+      opacity: 0.95;
+      margin: 0;
+    }
+
+    .fav-section {
+      margin-bottom: 50px;
+    }
+
+    .fav-section h2 {
+      font-size: 24px;
+      color: #333;
+      margin: 0 0 20px;
+      padding-bottom: 12px;
+      border-bottom: 3px solid #667eea;
+      display: inline-block;
+    }
+
+    .fav-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 25px;
+      margin-bottom: 30px;
+    }
+
+    .fav-card {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    }
+
+    .fav-card:hover {
+      border-color: #667eea;
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+      transform: translateY(-5px);
+    }
+
+    .fav-image {
+      width: 100%;
+      height: 200px;
+      overflow: hidden;
+      background: #f5f5f5;
+    }
+
+    .fav-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .fav-card:hover .fav-image img {
+      transform: scale(1.05);
+    }
+
+    .fav-info {
+      padding: 20px;
+    }
+
+    .fav-info h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+      margin: 0 0 8px;
+      line-height: 1.3;
+    }
+
+    .fav-meta {
+      font-size: 13px;
+      color: #999;
+      margin: 0 0 15px;
+    }
+
+    .fav-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .remove-fav {
+      background: #ff6b6b;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .remove-fav:hover {
+      background: #ff5252;
+      transform: scale(1.05);
+    }
+
+    .view-link {
+      flex: 1;
+      background: #667eea;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      text-decoration: none;
+      text-align: center;
+      font-size: 13px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .view-link:hover {
+      background: #5568d3;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      background: #f9f9f9;
+      border-radius: 10px;
+      margin: 30px 0;
+    }
+
+    .empty-state i {
+      font-size: 48px;
+      color: #ccc;
+      margin-bottom: 15px;
+      display: block;
+    }
+
+    .empty-state p {
+      color: #999;
+      font-size: 16px;
+      margin: 0;
+    }
+
+    .empty-state a {
+      display: inline-block;
+      margin-top: 15px;
+      background: #667eea;
+      color: white;
+      padding: 10px 25px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .empty-state a:hover {
+      background: #5568d3;
+    }
+
+    @media (max-width: 768px) {
+      .fav-header {
+        padding: 40px 20px;
+      }
+
+      .fav-header h1 {
+        font-size: 26px;
+      }
+
+      .fav-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+      }
+
+      .fav-image {
+        height: 150px;
+      }
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+<div class="favorites-container">
+  <!-- Վերնագիր -->
+  <div class="fav-header">
+    <h1><i class="fas fa-heart"></i> {{ g.get_text('my_favorites_page') }}</h1>
+    <p>{{ g.get_text('your_favorites') }}</p>
+  </div>
+
+  <!-- Նմուշներ -->
+  <div class="fav-section">
+    <h2><i class="fas fa-cube"></i> {{ g.get_text('artifacts_section') }}</h2>
+    
+    {% if artifacts %}
+      <div class="fav-grid">
+        {% for artifact in artifacts %}
+          <div class="fav-card">
+            <div class="fav-image">
+              <img src="{{ artifact.get_image_url() }}" alt="{{ artifact.get_name(g.language) }}">
+            </div>
+            <div class="fav-info">
+              <h3>{{ artifact.get_name(g.language) }}</h3>
+              <p class="fav-meta">{{ artifact.year or '—' }}</p>
+              <div class="fav-actions">
+                <button class="remove-fav" data-type="artifact" data-id="{{ artifact.id }}" title="{{ g.get_text('remove') }}">
+                  <i class="fas fa-times"></i> {{ g.get_text('remove') }}
+                </button>
+                <a href="{{ url_for('artifact_detail', id=artifact.id) }}" class="view-link">{{ g.get_text('details') }}</a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <i class="fas fa-cube"></i>
+        <p>{{ g.get_text('no_favorite_artifacts') }}</p>
+        <a href="{{ url_for('artifacts') }}">{{ g.get_text('view_all_artifacts_link') }}</a>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Ցուցադրություններ -->
+  <div class="fav-section">
+    <h2><i class="fas fa-museum"></i> {{ g.get_text('exhibitions_section') }}</h2>
+    
+    {% if exhibitions %}
+      <div class="fav-grid">
+        {% for ex in exhibitions %}
+          <div class="fav-card">
+            <div class="fav-image">
+              <img src="{{ ex.image_url or url_for('static', filename='default-exhibit.jpg') }}" alt="{{ ex.get_title(g.language) }}">
+            </div>
+            <div class="fav-info">
+              <h3>{{ ex.get_title(g.language) }}</h3>
+              <p class="fav-meta">{{ ex.start_date.strftime('%d.%m.%Y') }} — {{ ex.end_date.strftime('%d.%m.%Y') }}</p>
+              <div class="fav-actions">
+                <button class="remove-fav" data-type="exhibition" data-id="{{ ex.id }}" title="{{ g.get_text('remove') }}">
+                  <i class="fas fa-times"></i> {{ g.get_text('remove') }}
+                </button>
+                <a href="{{ url_for('exhibition_detail', id=ex.id) }}" class="view-link">{{ g.get_text('details') }}</a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <i class="fas fa-museum"></i>
+        <p>{{ g.get_text('no_favorite_exhibitions') }}</p>
+        <!-- Removed exhibitions link: exhibitions page deleted -->
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.remove-fav').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const type = this.dataset.type;
+      const id = this.dataset.id;
+      
+      fetch('/toggle-favorite', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ type: type, id: id })
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.removed) {
+          this.closest('.fav-card').remove();
+        }
+      });
+    });
+  });
+</script>
+{% endblock %}

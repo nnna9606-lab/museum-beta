@@ -1,0 +1,135 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Թվայնացված Թանգարան</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <div class="logo">
+                <h1>Թվայնացված Թանգարան</h1>
+            </div>
+            <nav class="nav-links">
+                <a href="/" class="nav-item active">
+                    <i class="fas fa-home"></i> Գլխավոր
+                </a>
+
+                <a href="/exhibitions" class="nav-item ">
+                    <i class="fas fa-museum"></i> Ցուցադրություններ
+                </a>
+                
+                    <a href="/login" class="nav-item">
+                        <i class="fas fa-sign-in-alt"></i> Մուտք
+                    </a>
+                    <a href="/register" class="nav-item">
+                        <i class="fas fa-user-plus"></i> Գրանցվել
+                    </a>
+                
+                
+            </nav>
+        </div>
+    </header>
+
+    <main class="home-page">
+        
+    <section class="hero">
+        <div class="hero-inner">
+            <h1>Գնահատեք մեր թվայնացված արժեքները</h1>
+            <p class="lead">Տեսեք բացառիկ նմուշներ, լուսանկարներ և պատմություններ՝ անմիջապես այս վեբ կայքից։</p>
+            <div class="hero-actions">
+                <a class="add-button" href="/exhibitions">Ցուցադրություններ</a>
+                <a class="view-more" href="/">Լրացուցիչ նմուշներ</a>
+            </div>
+        </div>
+    </section>
+
+    
+    <section class="featured-exhibitions">
+        <div class="page-header">
+            <h2>Ընտրված ցուցադրություններ</h2>
+            <a href="/exhibitions" class="view-more">Բոլորը</a>
+        </div>
+        <div class="exhibitions-grid">
+            
+                <div class="exhibition-card">
+                    <div class="exhibition-image">
+                        <img src="https://example.com/exhibition2.jpg" alt="Միջնադարյան արվեստ">
+                        <span class="status upcoming">
+                            Շուտով
+                        </span>
+                    </div>
+                    <div class="exhibition-info">
+                        <h3>Միջնադարյան արվեստ</h3>
+                        <p class="dates">2025-12-04 — 2026-01-03</p>
+                        <p class="artifacts-count">1 նմուշ</p>
+                    </div>
+                </div>
+            
+                <div class="exhibition-card">
+                    <div class="exhibition-image">
+                        <img src="https://example.com/exhibition1.jpg" alt="Հին Հայաստանի գանձերը">
+                        <span class="status active">
+                            ԸՆԹԱՑԸ
+                        </span>
+                    </div>
+                    <div class="exhibition-info">
+                        <h3>Հին Հայաստանի գանձերը</h3>
+                        <p class="dates">2025-10-25 — 2025-11-24</p>
+                        <p class="artifacts-count">2 նմուշ</p>
+                    </div>
+                </div>
+            
+        </div>
+    </section>
+    
+
+    <section class="artifacts-overview">
+        <div class="page-header">
+            <h2>Թարմացրած նմուշներ</h2>
+            <a href="/" class="view-more">Բացարձակորեն</a>
+        </div>
+
+        <div class="artifacts-grid">
+            
+                <div class="artifact-card">
+                    <img src="https://example.com/manuscript.jpg" alt="Հին ձեռագիր" class="artifact-image">
+                    <div class="artifact-info">
+                        <h3>Հին ձեռագիր</h3>
+                        <p class="year">1150</p>
+                        <a href="/artifact/3" class="view-more">Մանրամասներ</a>
+                    </div>
+                </div>
+            
+                <div class="artifact-card">
+                    <img src="https://example.com/jewelry.jpg" alt="Արծաթե զարդեր" class="artifact-image">
+                    <div class="artifact-info">
+                        <h3>Արծաթե զարդեր</h3>
+                        <p class="year">1200</p>
+                        <a href="/artifact/2" class="view-more">Մանրամասներ</a>
+                    </div>
+                </div>
+            
+                <div class="artifact-card">
+                    <img src="https://example.com/ceramic.jpg" alt="Հին հայկական խեցեղեն" class="artifact-image">
+                    <div class="artifact-info">
+                        <h3>Հին հայկական խեցեղեն</h3>
+                        <p class="year">450</p>
+                        <a href="/artifact/1" class="view-more">Մանրամասներ</a>
+                    </div>
+                </div>
+            
+        </div>
+    </section>
+
+
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Թվայնացված Թանգարան</p>
+    </footer>
+</body>
+</html>

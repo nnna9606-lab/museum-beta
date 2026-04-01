@@ -1,0 +1,329 @@
+{% extends "base.html" %}
+
+{% block title %}Ադմինիստրատորի վահանակ - Թվայնացված Թանգարան{% endblock %}
+
+{% block main_class %}admin-dashboard{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+    <style>
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 50px 40px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-header h1 {
+            font-size: 32px;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .dashboard-header p {
+            font-size: 14px;
+            opacity: 0.95;
+            margin: 8px 0 0 0;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .action-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.4);
+            padding: 10px 18px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .action-btn:hover {
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.6);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .stat-icon.blue {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .stat-icon.green {
+            background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
+        }
+
+        .stat-icon.orange {
+            background: linear-gradient(135deg, #ffa94d 0%, #fd7e14 100%);
+        }
+
+        .stat-icon.red {
+            background: linear-gradient(135deg, #ff6b6b 0%, #fa5252 100%);
+        }
+
+        .stat-body h3 {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0;
+            color: #333;
+        }
+
+        .stat-body p {
+            font-size: 13px;
+            color: #999;
+            margin: 5px 0 0 0;
+        }
+
+        .recent-section {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+
+        .recent-section h2 {
+            font-size: 20px;
+            margin: 0 0 25px;
+            color: #333;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .recent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+        }
+
+        .recent-card {
+            background: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .recent-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.15);
+            transform: translateY(-3px);
+        }
+
+        .recent-image {
+            width: 100%;
+            height: 140px;
+            overflow: hidden;
+            background: #e0e0e0;
+        }
+
+        .recent-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .recent-card:hover .recent-image img {
+            transform: scale(1.05);
+        }
+
+        .recent-info {
+            padding: 15px;
+        }
+
+        .recent-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin: 0 0 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .recent-meta {
+            font-size: 12px;
+            color: #999;
+            margin: 0;
+        }
+
+        .empty-block {
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 40px 20px;
+            text-align: center;
+            color: #999;
+            font-size: 14px;
+        }
+
+        .empty-block i {
+            font-size: 32px;
+            display: block;
+            margin-bottom: 10px;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 25px;
+            }
+
+            .dashboard-header h1 {
+                font-size: 24px;
+            }
+
+            .quick-actions {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .recent-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Վերնագիր -->
+    <div class="dashboard-header">
+        <div>
+            <h1><i class="fas fa-tachometer-alt"></i> Ադմինիստրատորի վահանակ</h1>
+            <p>Թանգարանի կառավարում և մոնիտորինգ</p>
+        </div>
+
+        <div class="quick-actions">
+            <a href="{{ url_for('add_artifact') }}" class="action-btn">
+                <i class="fas fa-plus"></i> Նոր նմուշ
+            </a>
+            <a href="{{ url_for('admin_users') }}" class="action-btn">
+                <i class="fas fa-users-cog"></i> Օգտատերերին
+            </a>
+            <a href="{{ url_for('admin_future_museum') }}" class="action-btn">
+                <i class="fas fa-lightbulb"></i> Ապագայի գաղափարներ
+            </a>
+        </div>
+    </div>
+
+    <!-- Վիճակագրական քարտեր -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon blue">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-body">
+                <h3>{{ users|length }}</h3>
+                <p>Ընդամենը օգտատերերին</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon green">
+                <i class="fas fa-cube"></i>
+            </div>
+            <div class="stat-body">
+                <h3>{{ artifacts|length }}</h3>
+                <p>Թանգարանային նմուշներ</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ...existing code... -->
+
+    <!-- Վերջին նմուշներ -->
+    <div class="recent-section">
+        <h2><i class="fas fa-history"></i> Վերջին նմուշներ</h2>
+        <div class="recent-grid">
+            {% for artifact in artifacts[-6:]|reverse %}
+            <div class="recent-card">
+                <a href="{{ url_for('artifact_detail', id=artifact.id) }}" style="text-decoration: none; color: inherit;">
+                    <div class="recent-image">
+                        {% if artifact.image_url %}
+                            {% if artifact.image_url.startswith('http') or artifact.image_url.startswith('/') %}
+                                <img src="{{ artifact.image_url }}" alt="{{ artifact.name }}">
+                            {% else %}
+                                <img src="{{ url_for('static', filename='uploads/' ~ artifact.image_url) }}" alt="{{ artifact.name }}">
+                            {% endif %}
+                        {% else %}
+                            <img src="{{ url_for('static', filename='default-artifact.jpg') }}" alt="{{ artifact.name }}">
+                        {% endif %}
+                    </div>
+                    <div class="recent-info">
+                        <p class="recent-title" title="{{ artifact.name }}">{{ artifact.name }}</p>
+                        <p class="recent-meta">{{ artifact.year or '—' }}</p>
+                    </div>
+                </a>
+            </div>
+            {% else %}
+            <div class="empty-block">
+                <i class="fas fa-cube"></i>
+                <p>Նմուշներ չեն գտնվել</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

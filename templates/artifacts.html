@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Նմուշներ - Թվայնացված Թանգարան{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='artifacts.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="artifacts-page">
+    <header class="page-header">
+        <h1>{{ g.get_text('artifacts_page_title') }}</h1>
+        <p class="lead">{{ g.get_text('artifacts_intro') }}</p>
+    </header>
+
+    <div class="search-section">
+        <form action="{{ url_for('artifacts') }}" method="GET" class="search-form">
+            <div class="search-row">
+                <div class="search-field">
+                    <label for="name">{{ g.get_text('artifact_name') }}</label>
+                    <input type="text" id="name" name="name" value="{{ request.args.get('name', '') }}" 
+                           placeholder="{{ g.get_text('search_by_name') }}">
+                </div>
+                
+                <div class="search-field">
+                    <label for="year">{{ g.get_text('year_label') }}</label>
+                    <input type="number" id="year" name="year" value="{{ request.args.get('year', '') }}"
+                           placeholder="{{ g.get_text('year_placeholder') }}">
+                </div>
+                
+                <div class="search-field">
+                    <label for="category">{{ g.get_text('category_label') }}</label>
+                    <select id="category" name="category">
+                        <option value="">{{ g.get_text('all_categories') }}</option>
+                        <option value="archaeological" {% if request.args.get('category') == 'archaeological' %}selected{% endif %}>
+                            {{ g.get_text('category_archaeological') }}
+                        </option>
+                        <option value="historical" {% if request.args.get('category') == 'historical' %}selected{% endif %}>
+                            {{ g.get_text('category_historical') }}
+                        </option>
+                        <option value="art" {% if request.args.get('category') == 'art' %}selected{% endif %}>
+                            {{ g.get_text('category_art') }}
+                        </option>
+                        <option value="cultural" {% if request.args.get('category') == 'cultural' %}selected{% endif %}>
+                            {{ g.get_text('category_cultural') }}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="search-actions">
+                    <button type="submit" class="search-button">
+                        <i class="fas fa-search"></i> {{ g.get_text('search_button') }}
+                    </button>
+                    {% if request.args %}
+                    <a href="{{ url_for('artifacts') }}" class="reset-button">
+                        <i class="fas fa-times"></i> {{ g.get_text('clear_button') }}
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="artifacts-container">
+        {% if artifacts %}
+        <div class="artifacts-grid">
+            {% for artifact in artifacts %}
+            <div class="artifact-card">
+                <div class="artifact-image">
+                    <img src="{{ artifact.get_image_url() }}" alt="{{ artifact.get_name(g.language) }}" loading="lazy">
+                </div>
+                <div class="artifact-info">
+                    <h3>{{ artifact.get_name(g.language) }}</h3>
+                    {% if artifact.year %}
+                    <p class="year"><i class="fas fa-calendar"></i> {{ artifact.year }}</p>
+                    {% endif %}
+                    {% if artifact.category %}
+                    <p class="category"><i class="fas fa-tag"></i> {{ artifact.category }}</p>
+                    {% endif %}
+                                        <div class="artifact-actions">
+                                            <button class="fav-btn {% if current_user.is_authenticated and (artifact in current_user.favorites_artifacts) %}active{% endif %}" data-type="artifact" data-id="{{ artifact.id }}" aria-pressed="false" title="Add to favorites">
+                                                <i class="fas fa-heart"></i>
+                                            </button>
+                                            <a href="{{ url_for('artifact_detail', id=artifact.id) }}" class="view-more">
+                                                <i class="fas fa-info-circle"></i> {{ g.get_text('details') }}
+                                            </a>
+                                        </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-artifacts">
+            <i class="fas fa-cubes"></i>
+            <h2>{{ g.get_text('no_artifacts_found') }}</h2>
+            <p>{{ g.get_text('no_artifacts_msg') }}</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

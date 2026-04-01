@@ -1,0 +1,178 @@
+body.future-museum-bg {
+    background: linear-gradient(120deg, #e0e7ff 0%, #f8fafc 100%);
+    min-height: 100vh;
+}
+
+.future-museum-page-wrapper {
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+.future-museum-container {
+    box-shadow: 0 8px 32px rgba(60,60,120,0.13), 0 1.5px 6px rgba(0,0,0,0.08);
+    border: 1.5px solid #e0e7ff;
+    background: rgba(255,255,255,0.98);
+}
+
+.future-museum-section {
+    margin-top: 36px;
+    margin-bottom: 28px;
+    background: #f4f7ff;
+    border-left: 6px solid #5a67d8;
+    border-radius: 14px;
+    box-shadow: 0 2px 12px rgba(90,103,216,0.07);
+    padding: 26px 32px 20px 26px;
+    transition: box-shadow 0.2s, border 0.2s;
+    position: relative;
+}
+.future-museum-section h3 {
+    color: #364fc7;
+    font-size: 1.35rem;
+    margin-bottom: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+.future-museum-section p {
+    color: #3d485c;
+    font-size: 1.09rem;
+    margin-bottom: 0;
+}
+
+@media (max-width: 600px) {
+    .future-museum-section {
+        padding: 16px 8px 12px 10px;
+    }
+}
+/* Նոր բաժինների ձևավորում */
+.future-museum-section {
+    background: #f0f4ff;
+    border-left: 5px solid #5a67d8;
+    border-radius: 12px;
+    margin-top: 32px;
+    margin-bottom: 24px;
+    padding: 22px 28px 18px 22px;
+    box-shadow: 0 2px 10px rgba(90,103,216,0.06);
+    transition: box-shadow 0.2s;
+}
+.future-museum-section h3 {
+    color: #364fc7;
+    font-size: 1.3rem;
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+.future-museum-section p {
+    color: #3d485c;
+    font-size: 1.08rem;
+    margin-bottom: 0;
+}
+/* future_museum.css - Թանգարանի ապագան էջի համար գեղեցիկ դիզայն */
+
+.future-museum-container {
+    max-width: 700px;
+    margin: 40px auto 0 auto;
+    background: rgba(255,255,255,0.95);
+    border-radius: 18px;
+    box-shadow: 0 8px 32px rgba(60,60,120,0.12), 0 1.5px 6px rgba(0,0,0,0.07);
+    padding: 36px 32px 32px 32px;
+    position: relative;
+    overflow: hidden;
+}
+.future-museum-container h2 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #2d3a4a;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+    text-align: center;
+}
+.future-museum-container p {
+    color: #4a5568;
+    font-size: 1.1rem;
+    text-align: center;
+    margin-bottom: 24px;
+}
+.future-museum-form {
+    background: #f7fafc;
+    border-radius: 12px;
+    padding: 18px 20px 14px 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    margin-bottom: 28px;
+}
+.future-museum-form label {
+    font-weight: 600;
+    color: #2d3a4a;
+}
+.future-museum-form textarea {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    padding: 10px;
+    font-size: 1rem;
+    margin-top: 6px;
+    margin-bottom: 10px;
+    resize: vertical;
+    min-height: 70px;
+    background: #fff;
+    transition: border 0.2s;
+}
+.future-museum-form textarea:focus {
+    border: 1.5px solid #5a67d8;
+    outline: none;
+}
+.future-museum-form button {
+    background: linear-gradient(90deg, #5a67d8 0%, #7f9cf5 100%);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 28px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(90,103,216,0.08);
+    transition: background 0.2s, box-shadow 0.2s;
+}
+.future-museum-form button:hover {
+    background: linear-gradient(90deg, #667eea 0%, #5a67d8 100%);
+    box-shadow: 0 4px 16px rgba(90,103,216,0.13);
+}
+.future-museum-ideas {
+    margin-top: 18px;
+}
+.future-museum-ideas h4 {
+    color: #4c51bf;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+.future-museum-ideas ul {
+    list-style: none;
+    padding: 0;
+}
+.future-museum-ideas li {
+    background: #edf2f7;
+    border-radius: 7px;
+    margin-bottom: 8px;
+    padding: 10px 14px;
+    color: #2d3748;
+    font-size: 1.05rem;
+    box-shadow: 0 1px 4px rgba(76,81,191,0.04);
+    transition: background 0.2s;
+}
+.future-museum-ideas li:hover {
+    background: #e2e8f0;
+}
+.alert-success {
+    background: #e6fffa;
+    color: #2c7a7b;
+    border: 1px solid #b2f5ea;
+    border-radius: 7px;
+    padding: 10px 16px;
+    margin-bottom: 12px;
+    text-align: center;
+    font-weight: 600;
+}
+@media (max-width: 600px) {
+    .future-museum-container {
+        padding: 18px 6px 18px 6px;
+    }
+}

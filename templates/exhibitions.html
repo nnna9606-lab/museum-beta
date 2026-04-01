@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+<!-- Removed exhibitions page and all related words as requested -->
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='exhibitions.css') }}">
+<script>
+function applyFilters() {
+    const status = document.getElementById('status-filter').value;
+    const sort = document.getElementById('sort-by').value;
+    
+    let url = new URL(window.location);
+    url.searchParams.set('status', status);
+    url.searchParams.set('sort', sort);
+    
+    window.location = url;
+}
+</script>
+{% endblock %}
+
+{% block content %}
+    <div class="exhibitions-container">
+        <div class="page-header">
+            <h2><i class="fas fa-museum"></i> {{ g.get_text('exhibitions_page_title') }}</h2>
+            <p class="subtitle">{{ g.get_text('exhibitions_intro') }}</p>
+            {% if current_user.is_authenticated and current_user.is_admin %}
+                <!-- Removed add exhibition button as requested -->
+                    <i class="fas fa-plus"></i> {{ g.get_text('add_exhibition') }}
+                </a>
+            {% endif %}
+        </div>
+
+        <div class="filter-section">
+            <div class="filter-group">
+                <label for="status-filter">{{ g.get_text('status_filter') }}</label>
+                <select id="status-filter" onchange="applyFilters()">
+                    <option value="all" {% if current_status == 'all' %}selected{% endif %}>{{ g.get_text('status_all') }}</option>
+                    <option value="active" {% if current_status == 'active' %}selected{% endif %}>{{ g.get_text('status_active') }}</option>
+                    <option value="upcoming" {% if current_status == 'upcoming' %}selected{% endif %}>{{ g.get_text('status_upcoming') }}</option>
+                    <!-- Removed past status option as requested -->
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="sort-by">{{ g.get_text('sort_by') }}</label>
+                <select id="sort-by" onchange="applyFilters()">
+                    <option value="start_date" {% if current_sort == 'start_date' %}selected{% endif %}>{{ g.get_text('sort_by_date') }}</option>
+                    <option value="title" {% if current_sort == 'title' %}selected{% endif %}>{{ g.get_text('sort_by_title') }}</option>
+                    <option value="artifacts" {% if current_sort == 'artifacts' %}selected{% endif %}>{{ g.get_text('sort_by_artifacts') }}</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="exhibitions-grid">
+            {% for exhibition in exhibitions %}
+                <div class="exhibition-card">
+                    <div class="exhibition-image">
+                        {% if exhibition.image_url %}
+                            {% if exhibition.image_url.startswith('http') or exhibition.image_url.startswith('/') %}
+                                <img src="{{ exhibition.image_url }}" alt="{{ exhibition.get_title(g.language) }}" loading="lazy">
+                            {% else %}
+                                <img src="{{ url_for('static', filename='uploads/' ~ exhibition.image_url) }}" alt="{{ exhibition.get_title(g.language) }}" loading="lazy">
+                            {% endif %}
+                        {% else %}
+                            <img src="{{ url_for('static', filename='default-exhibit.jpg') }}" alt="{{ exhibition.get_title(g.language) }}" loading="lazy">
+                        {% endif %}
+                        {% if exhibition.start_date <= today and exhibition.end_date >= today %}
+                            <span class="status active">{{ g.get_text('status_active') }}</span>
+                        {% elif exhibition.start_date > today %}
+                            <span class="status upcoming">{{ g.get_text('status_upcoming') }}</span>
+                        {% else %}
+                            <span class="status past">{{ g.get_text('status_past') }}</span>
+                        {% endif %}
+                    </div> <!-- Removed exhibition status display as requested -->
+                    <div class="exhibition-info">
+                        <h3>{{ exhibition.get_title(g.language) }}</h3>
+                        <div class="exhibition-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-calendar-alt"></i>
+                                {{ exhibition.start_date.strftime('%d.%m.%Y') }}
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-calendar-check"></i>
+                                <!-- Removed exhibition end date display as requested -->
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-cube"></i>
+                                {{ exhibition.artifacts|length }} {{ g.get_text('samples') }}
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-clock"></i>
+                                {% set days = (exhibition.end_date - exhibition.start_date).days %}
+                                <!-- Removed exhibition days display as requested -->
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <a href="{{ url_for('exhibition_detail', id=exhibition.id) }}" class="view-more">
+                                <i class="fas fa-info-circle"></i> {{ g.get_text('details') }}
+                            </a>
+                            {% if current_user.is_authenticated %}
+                            <button class="fav-btn {% if exhibition in current_user.favorites_exhibitions %}active{% endif %}" 
+                                    data-type="exhibition" 
+                                    data-id="{{ exhibition.id }}" 
+                                    aria-pressed="{% if exhibition in current_user.favorites_exhibitions %}true{% else %}false{% endif %}" 
+                                    title="{{ g.get_text('add_remove_favorites') }}">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                            {% else %}
+                            <a href="{{ url_for('login') }}" class="fav-btn" title="{{ g.get_text('login_to_favorite') }}">
+                                <i class="fas fa-heart"></i>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="no-items">
+                    <i class="fas fa-museum"></i>
+                    <p>{{ g.get_text('no_exhibitions') }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

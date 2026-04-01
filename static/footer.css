@@ -1,0 +1,173 @@
+/* Footer ոճեր */
+.site-footer {
+    background: var(--secondary-color);
+    color: white;
+    padding: 4rem 0 0;
+    margin-top: 4rem;
+}
+
+.footer-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 3rem;
+    padding: 0 2rem;
+}
+
+.footer-section h3 {
+    color: var(--accent-color);
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+}
+
+.footer-section p {
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.footer-section ul {
+    list-style: none;
+}
+
+.footer-section ul li {
+    margin-bottom: 0.8rem;
+}
+
+.footer-section ul a {
+    color: #fff;
+    text-decoration: none;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.footer-section ul a:hover {
+    color: var(--accent-color);
+    padding-left: 0.5rem;
+}
+
+.footer-bottom {
+    margin-top: 3rem;
+    padding: 1.5rem 0;
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Flash հաղորդագրություններ */
+.flash-messages {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    z-index: 1000;
+    max-width: 400px;
+}
+
+.alert {
+    background: white;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    animation: slideIn 0.3s ease;
+}
+
+.alert i {
+    font-size: 1.2rem;
+}
+
+.alert-success {
+    border-left: 4px solid #2ecc71;
+    color: #27ae60;
+}
+
+.alert-error {
+    border-left: 4px solid #e74c3c;
+    color: #c0392b;
+}
+
+.alert-info {
+    border-left: 4px solid #3498db;
+    color: #2980b9;
+}
+
+.close-alert {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: currentColor;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: var(--transition);
+}
+
+.close-alert:hover {
+    opacity: 1;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Ադապտիվ ոճեր */
+@media (max-width: 768px) {
+    .site-footer {
+        padding: 2rem 0 0;
+    }
+
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        padding: 0 1rem;
+    }
+
+    .flash-messages {
+        top: 1rem;
+        right: 1rem;
+        left: 1rem;
+        max-width: none;
+    }
+}
+
+/* Dark Mode Support */
+:root.dark-mode .site-footer {
+    background: #1a1a1a;
+    color: #e0e0e0;
+    border-top-color: #2a2a2a;
+}
+
+:root.dark-mode .footer-section h3 {
+    color: #e0e0e0;
+}
+
+:root.dark-mode .footer-section p {
+    color: #b0b0b0;
+}
+
+:root.dark-mode .footer-section ul a {
+    color: #b0b0b0;
+}
+
+:root.dark-mode .footer-section ul a:hover {
+    color: #667eea;
+}
+
+:root.dark-mode .footer-bottom {
+    border-top-color: #2a2a2a;
+    color: #b0b0b0;
+}

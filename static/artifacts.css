@@ -1,0 +1,262 @@
+/* artifacts.css */
+.artifacts-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Որոնման բաժնի ոճեր */
+.search-section {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.search-form {
+    width: 100%;
+}
+
+.search-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: flex-end;
+}
+
+.search-field {
+    flex: 1;
+    min-width: 200px;
+}
+
+.search-field label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+.search-field input,
+.search-field select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.search-field input:focus,
+.search-field select:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.search-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-end;
+}
+
+.search-button,
+.reset-button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+}
+
+.search-button {
+    background-color: #3498db;
+    color: white;
+}
+
+.search-button:hover {
+    background-color: #2980b9;
+}
+
+.reset-button {
+    background-color: #95a5a6;
+    color: white;
+}
+
+.reset-button:hover {
+    background-color: #7f8c8d;
+}
+
+@media (max-width: 768px) {
+    .search-row {
+        flex-direction: column;
+    }
+
+    .search-field {
+        width: 100%;
+    }
+    
+    .search-actions {
+        width: 100%;
+        justify-content: stretch;
+    }
+    
+    .search-button,
+    .reset-button {
+        flex: 1;
+        justify-content: center;
+    }
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.page-header h1 {
+    font-size: 2.5rem;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+}
+
+.page-header .lead {
+    font-size: 1.2rem;
+    color: #7f8c8d;
+}
+
+.artifacts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.artifact-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.artifact-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.artifact-image {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+}
+
+.artifact-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.artifact-info {
+    padding: 1.5rem;
+}
+
+.artifact-info h3 {
+    font-size: 1.25rem;
+    margin: 0 0 1rem;
+    color: #2c3e50;
+}
+
+.artifact-info .year,
+.artifact-info .category {
+    font-size: 0.9rem;
+    color: #7f8c8d;
+    margin: 0.5rem 0;
+}
+
+.artifact-info .year i,
+.artifact-info .category i {
+    margin-right: 0.5rem;
+}
+
+.view-more {
+    display: inline-flex;
+    align-items: center;
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    color: #3498db;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.view-more:hover {
+    background-color: #f7f9fc;
+}
+
+.view-more i {
+    margin-right: 0.5rem;
+}
+
+.no-artifacts {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: #7f8c8d;
+}
+
+.no-artifacts i {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.no-artifacts h2 {
+    font-size: 1.5rem;
+    margin: 1rem 0;
+}
+
+@media (max-width: 768px) {
+    .artifacts-page {
+        padding: 1rem;
+    }
+
+    .artifacts-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+
+    .page-header h1 {
+        font-size: 2rem;
+    }
+}
+
+/* Dark Mode Support */
+:root.dark-mode .search-section {
+    background: #1a1a1a;
+    color: #e0e0e0;
+}
+
+:root.dark-mode .search-field label {
+    color: #e0e0e0;
+}
+
+:root.dark-mode .search-field input,
+:root.dark-mode .search-field select {
+    background: #2a2a2a;
+    border-color: #3a3a3a;
+    color: #e0e0e0;
+}
+
+:root.dark-mode .artifact-card {
+    background: #1a1a1a;
+    color: #e0e0e0;
+}
+
+:root.dark-mode .artifact-card h3 {
+    color: #e0e0e0;
+}
+
+:root.dark-mode .page-header h1 {
+    color: #e0e0e0;
+}

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="60" xmlns="http://www.w3.org/2000/svg">
+    <style>
+        .logo-text { font-family: Arial, sans-serif; fill: #92242a; }
+        .museum-icon { fill: #2c3e50; }
+    </style>
+    <g transform="translate(10,10)">
+        <path class="museum-icon" d="M40 40V20L20 10L0 20v20h40zM18 38h4V22h-4v16zm-10 0h4V22h-4v16zm20 0h4V22h-4v16z"/>
+        <text x="50" y="30" class="logo-text" font-size="18" font-weight="bold">Թվայնացված</text>
+        <text x="50" y="45" class="logo-text" font-size="14">Թանգարան</text>
+    </g>
+</svg>

@@ -1,0 +1,157 @@
+$env:FLASK_APP=app.py
+$env:FLASK_ENV=development
+{% extends "base.html" %}
+
+{% block title %}Կարգավորումներ - Թվայնացված Թանգարան{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='user.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+{% endblock %}
+
+{% block main_class %}user-settings{% endblock %}
+
+{% block content %}
+<div class="ud-wrapper">
+  <header class="ud-hero">
+    <div class="ud-hero-inner">
+      <div class="ud-avatar"><i class="fas fa-user-circle"></i></div>
+      <div>
+        <h1>Կարգավորումներ</h1>
+        <p class="muted">Թարմացրեք ձեր պրոֆիլը և գաղտնաբառը</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="ud-main">
+    <section class="card-section">
+      <div class="panel settings-panel grid-2">
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="flash" role="status" aria-live="polite" style="display:none">
+              {% for msg in messages %}
+                <div class="flash-item">{{ msg }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <div class="profile-column">
+          <div class="profile-card">
+            <img id="profilePreview" src="{{ current_user.get_profile_image_url() }}" alt="Profile" class="profile-img">
+            <h3>{{ current_user.username }}</h3>
+            <p class="muted">Սա է ձեր պրոֆիլը։ Այստեղ կարող եք փոխել նկարը կամ տվյալները։</p>
+            <ul class="profile-stats">
+              <li><strong>Ծագում:</strong> {{ current_user.created_at.strftime('%d.%m.%Y') if current_user.created_at else '-' }}</li>
+              <li><strong>Դերը:</strong> {{ 'Ադմին' if current_user.is_admin else 'Օգտատեր' }}</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="form-column">
+          <form method="POST" class="settings-form" enctype="multipart/form-data" id="settingsForm">
+            <div class="form-grid">
+              <div class="form-row">
+                <label for="username">Օգտանուն</label>
+                <input id="username" name="username" type="text" value="{{ current_user.username }}" required>
+                <div class="error-text" id="usernameError" aria-live="polite"></div>
+              </div>
+
+              <div class="form-row">
+                <label for="email">Էլ. փոստ</label>
+                <input id="email" name="email" type="email" value="{{ current_user.email }}" required>
+                <div class="error-text" id="emailError" aria-live="polite"></div>
+              </div>
+
+              <div class="form-row">
+                <label for="current_password">Ընթացիկ գաղտնաբառ</label>
+                <input id="current_password" name="current_password" type="password" autocomplete="current-password" placeholder="Մուտքագրեք ընթացիկ գաղտնաբառը">
+                <small class="muted">Պետք է՝ եթե ցանկանում եք փոխել գաղտնաբառը կամ էլ. հասցեն</small>
+              </div>
+
+              <div class="form-row">
+                <label for="password">Նոր գաղտնաբառ</label>
+                <input id="password" name="password" type="password" autocomplete="new-password" placeholder="Նոր գաղտնաբառ (եթե փոխում եք)">
+                <div class="error-text" id="passwordError" aria-live="polite"></div>
+              </div>
+
+              <div class="form-row file-row">
+                <label for="profile_image">Պրոֆիլային նկար</label>
+                <input id="profile_image" name="profile_image" type="file" accept="image/*">
+                <small class="muted">JPEG/PNG, առավելագույնը 5MB</small>
+                <div class="error-text" id="fileError" aria-live="polite"></div>
+              </div>
+            </div>
+
+            <div class="actions" style="margin-top:14px; display:flex; gap:10px;">
+              <button class="btn btn-primary" type="submit">Պահպանել</button>
+              <a class="btn btn-outline" href="{{ url_for('user_dashboard') }}">Վերադառնալ</a>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </section>
+  </main>
+</div>
+
+<div id="globalToast" class="toast" aria-live="polite" aria-atomic="true" style="display:none"></div>
+
+<script>
+// Image preview for profile image
+;(function(){
+  var fileIn = document.getElementById('profile_image');
+  var preview = document.getElementById('profilePreview');
+  if(!fileIn || !preview) return;
+  fileIn.addEventListener('change', function(e){
+    var f = this.files && this.files[0];
+    if(!f) return;
+    if(!f.type.startsWith('image/')) return;
+    var reader = new FileReader();
+    reader.onload = function(ev){ preview.src = ev.target.result; };
+    reader.readAsDataURL(f);
+  });
+})();
+
+// Client-side inline validation
+document.getElementById('settingsForm').addEventListener('submit', function(e){
+  var pwd = document.getElementById('password');
+  var cur = document.getElementById('current_password');
+  var username = document.getElementById('username');
+  var email = document.getElementById('email');
+  var fileIn = document.getElementById('profile_image');
+
+  // Clear previous errors
+  ['usernameError','emailError','passwordError','fileError'].forEach(function(id){ var el=document.getElementById(id); if(el) el.textContent=''; });
+
+  var hasError = false;
+  if(username && username.value.trim().length < 3){ document.getElementById('usernameError').textContent='Օգտանունը պետք է ունենա առնվազն 3 նշան'; hasError = true; }
+  if(email){ var re=/^[^@\s]+@[^@\s]+\.[^@\s]+$/; if(!re.test(email.value.trim())){ document.getElementById('emailError').textContent='Խնդրում ենք մուտքագրել վավեր էլ. հասցե'; hasError = true; } }
+  if(pwd && pwd.value.trim() !== ''){ if(pwd.value.length < 8){ document.getElementById('passwordError').textContent='Գաղտնաբառը պետք է լինի առնվազն 8 նիշ'; hasError = true; } if(!cur || cur.value.trim()===''){ document.getElementById('passwordError').textContent='Գաղտնաբառը փոխելու համար մուտքագրեք ընթացիկ գաղտնաբառը'; hasError = true; } }
+  if(fileIn && fileIn.files && fileIn.files[0]){ var f=fileIn.files[0]; if(f.size > 5*1024*1024){ document.getElementById('fileError').textContent='Ֆայլը մեծ է (առավելագույնը 5MB)'; hasError = true; } if(!f.type.startsWith('image/')){ document.getElementById('fileError').textContent='Խնդրում ենք ընտրել նկար (jpg/png)'; hasError = true; } }
+
+  var originalUsername = '{{ current_user.username }}';
+  var originalEmail = '{{ current_user.email }}';
+  if((username && username.value.trim() !== originalUsername) || (email && email.value.trim() !== originalEmail)){
+    if(!cur || cur.value.trim()===''){ document.getElementById('emailError').textContent = document.getElementById('emailError').textContent || 'Պրոֆիլային փոփոխությունների համար մուտքագրեք ընթացիկ գաղտնաբառը'; hasError = true; }
+  }
+
+  if(hasError){ e.preventDefault(); return false; }
+});
+
+// Display server flash messages as toast
+(function(){
+  var flash = document.querySelector('.flash');
+  if(!flash) return;
+  var items = flash.querySelectorAll('.flash-item');
+  if(!items || items.length===0) return;
+  var texts = Array.prototype.map.call(items, function(i){ return i.textContent.trim(); }).filter(Boolean);
+  if(texts.length===0) return;
+  var toast = document.getElementById('globalToast');
+  toast.innerHTML = '<div class="toast-body">' + texts.join('<br>') + '</div>';
+  toast.style.display = 'block';
+  setTimeout(function(){ toast.classList.add('show'); }, 50);
+  setTimeout(function(){ toast.classList.remove('show'); setTimeout(function(){ toast.style.display='none'; },300); }, 5000);
+})();
+</script>
+{% endblock %}
