@@ -2,4 +2,5 @@ Flask
 Jinja2
 Werkzeug
 gunicorn
+flask_sqlalchemy
 # Այստեղ կարող եք ավելացնել նաև ձեր օգտագործած այլ փաթեթները
